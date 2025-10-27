@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI 협업 리더 역량 진단 설문</title>
+    <title>AI 협업 리더 역량 진단 설문 (로컬 저장용)</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     
@@ -39,38 +39,40 @@
         
         .rating-label {
             /* flex-grow: 1 대신 min-width를 사용하여 모바일에서 겹침 방지 및 줄바꿈 유도 */
-            min-width: calc(20% - 0.5rem); /* 5개 버튼이 1줄에 들어갈 때의 최소 너비, 간격 고려 */
-            flex-basis: auto; /* 내용 길이에 따라 유동적으로 너비 조절 */
+            min-width: calc(20% - 0.5rem); 
+            flex-basis: auto; 
             display: flex; 
             flex-direction: column; 
             align-items: center; 
-            justify-content: space-between; /* 내용 상하 배치 */
+            justify-content: space-between; 
             cursor: pointer; 
-            padding: 0.75rem 0.25rem; /* 상하 여백 늘려 버튼 영역 확보 */
-            min-height: 90px; /* 최소 높이 지정하여 텍스트 길이에 관계없이 정렬 유지 */
+            padding: 0.75rem 0.25rem; 
+            min-height: 90px; 
             border-radius: 0.75rem; 
-            transition: all 0.2s ease-in-out; /* 부드러운 전환 효과 */
-            border: 2px solid #e0e0e0; /* 기본 테두리 색상 추가 */
+            transition: all 0.2s ease-in-out; 
             text-align: center;
-            background-color: #f8f8f8; /* 기본 배경색 */
-            margin: 0.25rem; /* 버튼 간 최소 간격 확보 */
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05); /* 은은한 그림자 */
+            margin: 0.25rem; 
+            
+            /* 배경색, 테두리, 그림자 완전히 제거 */
+            border: none;
+            background-color: transparent;
+            box-shadow: none;
         }
 
         /* 모바일 환경에서 버튼 너비 조정 */
         @media (max-width: 640px) { /* sm breakpoint */
             .rating-label {
-                min-width: calc(50% - 0.5rem); /* 모바일에서는 한 줄에 2개씩 배치 */
-                min-height: 80px; /* 모바일에서 높이 조정 */
+                min-width: calc(50% - 0.5rem); 
+                min-height: 80px; 
             }
             /* 점수별 설명 텍스트 크기 모바일 최적화 */
             .rating-score-text {
-                font-size: 0.8rem; /* text-xs 보다 조금 더 크게 */
+                font-size: 0.8rem; 
             }
         }
         @media (max-width: 480px) { /* 더 작은 모바일 화면 */
             .rating-label {
-                min-width: calc(100% - 0.5rem); /* 한 줄에 1개씩 배치 */
+                min-width: calc(100% - 0.5rem); 
                 min-height: 70px;
             }
             .rating-score-text {
@@ -79,62 +81,63 @@
         }
 
 
-        /* 호버 시 시각적 피드백 */
+        /* 호버 시 시각적 피드백 제거 (텍스트만 살짝 밝게) */
         .rating-label:hover {
-            background-color: #eef2ff; /* indigo-50 */
-            border-color: #a5b4fc; /* indigo-300 */
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            transform: translateY(-2px); /* 살짝 떠오르는 효과 */
+            background-color: transparent; 
+            transform: none; 
         }
+        .rating-label:hover .rating-score-text {
+            color: #64748b; /* slate-500: 호버 시 텍스트 색상만 살짝 변경 */
+        }
+
 
         /* 작은 동그라미 (체크 마크)의 기본 스타일 */
         .rating-circle {
-            width: 1.25rem; /* w-5 */
-            height: 1.25rem; /* h-5 */
-            border-radius: 9999px; /* rounded-full */
-            border-width: 2px; /* border-2 */
-            border-color: #9ca3af; /* gray-400 */
-            background-color: #ffffff; /* bg-white */
+            width: 1.25rem; 
+            height: 1.25rem; 
+            border-radius: 9999px; 
+            border-width: 2px; 
+            border-color: #94a3b8; /* slate-400 */
+            background-color: #ffffff; 
             display: block; 
-            margin-bottom: 0.5rem; /* mb-2 */
+            margin-bottom: 0.5rem; 
             transition: all 0.15s ease-in-out;
         }
 
         /* 점수 텍스트 (보기 설명)의 기본 스타일 */
         .rating-score-text {
-            font-size: 0.875rem; /* text-sm으로 변경 */
-            font-weight: 500; /* font-medium */
+            font-size: 0.875rem; 
+            font-weight: 500; 
             color: #4b5563; /* text-gray-700 */
-            line-height: 1.3; /* 줄 간격 조절 */
+            line-height: 1.3; 
             transition: all 0.15s ease-in-out;
         }
         
         .rating-score-number {
-             font-weight: 700; /* 굵기 강화 */
+             font-weight: 700; 
              margin-right: 0.15rem;
              color: #4f46e5; /* indigo-600 */
         }
 
         /* --- Input이 선택되었을 때의 스타일 (핵심 기능) --- */
         
-        /* 선택 시 라벨 배경 강조 및 테두리 색상 변경 */
+        /* 선택 시 라벨 배경 강조 및 테두리 색상 변경 제거 */
         .rating-input:checked + .rating-label {
-            background-color: #e0e7ff; /* indigo-100 */
-            border-color: #6366f1; /* indigo-500 */
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            transform: translateY(-2px); /* 선택 시 살짝 떠오르는 효과 유지 */
+            background-color: transparent; 
+            transform: none; 
+            box-shadow: none;
         }
 
         /* 작은 동그라미 칸에 색 채우기 */
         .rating-input:checked + .rating-label .rating-circle {
             background-color: #4f46e5; /* indigo-600 */
             border-color: #4f46e5; /* indigo-600 */
-            transform: scale(1.1); /* 선택 시 살짝 커지는 효과 */
+            transform: scale(1.1); 
         }
 
         /* 선택된 보기 텍스트를 굵게 변경 및 색상 강조 */
         .rating-input:checked + .rating-label .rating-score-text {
-            font-weight: 700; /* font-bold */
+            font-weight: 700; 
             color: #3730a3; /* indigo-900 */
         }
         .rating-input:checked + .rating-label .rating-score-number {
@@ -142,11 +145,11 @@
         }
     </style>
 </head>
-<body class="bg-gray-50 min-h-screen p-4 sm:p-8">
+<body class="bg-gray-100 min-h-screen p-4 sm:p-8">
     <div id="app" class="max-w-4xl mx-auto bg-white shadow-xl rounded-2xl p-6 sm:p-10">
         
-        <header class="text-center mb-10 border-b pb-6 border-indigo-100">
-            <h1 class="text-3xl sm:text-4xl font-extrabold text-indigo-700 mb-2 leading-tight">
+        <header class="text-center mb-10 border-b pb-6 border-gray-200">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-800 mb-2 leading-tight">
                 AI 협업 워크플로우 리더 역량 진단
             </h1>
             <p class="text-gray-600 text-lg sm:text-xl">
@@ -158,15 +161,17 @@
             <div id="questionsContainer" class="space-y-8"></div>
 
             <div class="mt-12">
+                <!-- API 호출 상태 표시기 제거 (로컬 저장 버전) -->
+
                 <button type="submit" id="submitButton"
-                    class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 sm:py-4 px-4 rounded-lg transition duration-300 shadow-lg hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-indigo-500 focus:ring-opacity-50 text-lg">
+                    class="w-full bg-slate-700 hover:bg-slate-800 text-white font-bold py-3 sm:py-4 px-4 rounded-lg transition duration-300 shadow-lg hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-slate-500 focus:ring-opacity-50 text-lg">
                     진단 결과 확인하기
                 </button>
             </div>
         </form>
 
-        <div id="resultsContainer" class="hidden mt-16 pt-8 border-t-4 border-indigo-200">
-            <h2 class="text-3xl sm:text-4xl font-bold text-indigo-700 mb-8 text-center">종합 진단 결과</h2>
+        <div id="resultsContainer" class="hidden mt-16 pt-8 border-t-4 border-slate-300">
+            <h2 class="text-3xl sm:text-4xl font-bold text-slate-700 mb-8 text-center">종합 진단 결과</h2>
             
             <div id="scoreSummary" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
                 </div>
@@ -176,11 +181,11 @@
 
             <div class="mt-12 text-center space-x-2 sm:space-x-4">
                  <button id="goBackButton"
-                    class="bg-indigo-100 hover:bg-indigo-200 text-indigo-800 font-bold py-3 px-4 sm:px-6 rounded-lg transition duration-300 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-opacity-50 text-base sm:text-lg">
+                    class="bg-slate-700 hover:bg-slate-800 text-white font-bold py-3 px-4 sm:px-6 rounded-lg transition duration-300 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-opacity-50 text-base sm:text-lg">
                     응답 확인 및 수정하기
                 </button>
                  <button id="restartButton"
-                    class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 px-4 sm:px-6 rounded-lg transition duration-300 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50 text-base sm:text-lg">
+                    class="bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 px-4 sm:px-6 rounded-lg transition duration-300 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-opacity-50 text-base sm:text-lg">
                     설문 다시 시작하기
                 </button>
             </div>
@@ -249,7 +254,7 @@
             'III': {
                 high: { title: '👑 미래 변화 주도 리더', message: '✅ <b>현재 상태:</b> AI가 가져올 변화의 파급력을 믿고 있으며, 팀원의 육성, 실험적 문화 지원, 평가 기준 변화에 대한 인식과 의지가 확고합니다. 변화를 이끌 준비가 되어 있습니다. \n\n🚀 <b>성장 방향:</b> 교육의 <b>3, 4단계(재설계 및 역할 재정의)</b>를 통해 리더님의 강력한 의지를 <b>실질적인 변화 관리 전략</b>과 <b>AI 시대에 맞는 팀 운영 모델</b>로 최적화하십시오. <b>롤 모델</b>으로서의 역할을 완성하는 데 집중해 주세요.' },
                 mid: { title: '🤝 역할 변화 고민 단계', message: '✅ <b>현재 상태:</b> AI의 영향력은 인지하지만, 팀원들의 새로운 역량 육성, 평가 기준 변화, 실험 문화 조성에 대한 <b>구체적인 지원 방안</b>에 대한 고민은 진행 중인 단계입니다. \n\n💪 <b>성장 방향:</b> AI 시대 리더의 역할은 \'촉진자/지원자\'입니다. 교육의 <b>4단계(리더의 역할 재정의)</b>를 통해 <b>팀원들의 자발적 AI 활용</b>을 이끌어낼 수 있는 <b>실질적인 지원 전략</b>과 <b>유연한 평가 기준</b> 설정 방안을 모색하는 데 집중하십시오.' },
-                low: { title: '� 리더십 관점 전환 필수', message: '✅ <b>현재 상태:</b> AI가 업무 프로세스 자체를 바꾼다는 믿음이 약하며, 변화 관리 및 팀 지원에 대한 의지가 낮은 상태입니다. 새로운 기술에 대한 리더십 관점 전환이 필요합니다. \n\n🎯 <b>성장 방향:</b> AI는 단순히 \'업무 개선\'을 넘어 \'업무 재설계\'를 요구합니다. 교육의 <b>3단계(재설계)</b>와 <b>4단계(역할 재정의)</b>에서 제시하는 <b>AI 시대의 새로운 리더십 관점</b>을 반드시 내재화하고, 변화를 주도하는 첫 걸음을 내딛는 데 집중해 주세요.' }
+                low: { title: '🔄 리더십 관점 전환 필수', message: '✅ <b>현재 상태:</b> AI가 업무 프로세스 자체를 바꾼다는 믿음이 약하며, 변화 관리 및 팀 지원에 대한 의지가 낮은 상태입니다. 새로운 기술에 대한 리더십 관점 전환이 필요합니다. \n\n🎯 <b>성장 방향:</b> AI는 단순히 \'업무 개선\'을 넘어 \'업무 재설계\'를 요구합니다. 교육의 <b>3단계(재설계)</b>와 <b>4단계(역할 재정의)</b>에서 제시하는 <b>AI 시대의 새로운 리더십 관점</b>을 반드시 내재화하고, 변화를 주도하는 첫 걸음을 내딛는 데 집중해 주세요.' }
             }
         };
 
@@ -266,7 +271,7 @@
         let userResponses = []; // 응답 내용을 저장할 배열
 
         // -------------------------------------------------------------------------
-        // CSV 파일 다운로드 기능
+        // CSV 파일 다운로드 기능 (로컬 저장)
         // -------------------------------------------------------------------------
 
         // 배열 데이터를 CSV 형식 문자열로 변환 (UTF-8 BOM 포함)
@@ -287,7 +292,6 @@
         // CSV 파일 다운로드 실행
         function exportResponsesToCSV() {
             if (userResponses.length === 0) {
-                // 다운로드 직전에만 호출되므로 이 경고는 거의 나타나지 않음
                 console.error("저장할 응답 내용이 없습니다.");
                 return;
             }
@@ -316,6 +320,17 @@
         }
         // -------------------------------------------------------------------------
 
+        // 레벨 문자열을 반환하는 헬퍼 함수
+        function getLevelInfo(average) {
+            if (average >= 4.0) {
+                return { level: 3, name: "Level 3 (변화 주도)" };
+            } else if (average >= 3.0) {
+                return { level: 2, name: "Level 2 (활용 확장)" };
+            } else {
+                return { level: 1, name: "Level 1 (기반 정립)" };
+            }
+        }
+
 
         // 1. 설문 문항 동적 생성 함수
         function renderQuestions() {
@@ -334,7 +349,7 @@
                 // 영역 제목
                 const areaTitleDiv = document.createElement('div');
                 areaTitleDiv.className = 'pb-2 mb-4'; 
-                areaTitleDiv.innerHTML = `<h2 class="text-xl sm:text-2xl font-semibold text-indigo-600">${area.title}</h2>`;
+                areaTitleDiv.innerHTML = `<h2 class="text-xl sm:text-2xl font-semibold text-slate-700">${area.title}</h2>`; // 타이틀 색상 변경
                 questionsContainer.appendChild(areaTitleDiv);
 
                 // 영역별 테두리 그룹 컨테이너
@@ -355,7 +370,7 @@
                     // 질문 텍스트
                     questionDiv.innerHTML = `
                         <p class="text-base sm:text-lg font-medium text-gray-800 mb-4 leading-relaxed">
-                            <span class="text-indigo-600 font-bold mr-2">${qIndex}.</span> ${qText}
+                            <span class="text-slate-700 font-bold mr-2">${qIndex}.</span> ${qText}
                         </p>
                         
                         <div class="flex flex-wrap justify-center sm:justify-between -m-1"> ${[1, 2, 3, 4, 5].map(score => `
@@ -393,7 +408,7 @@
                 if (!checkedInput) {
                     allAnswered = false;
                     // 미응답 문항을 찾았을 때 해당 문항으로 스크롤 이동 (UX 개선)
-                    const questionElement = document.querySelector(`input[name="${qName}"]`).closest('div[class*="pb-4"]'); // 질문 div 탐색
+                    const questionElement = document.querySelector(`input[name="${qName}"]`).closest('div[class*="pt-4"]'); // 질문 div 탐색
                     if(questionElement) {
                         questionElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
                         // 미응답 문항에 시각적 강조 효과 추가 (선택적)
@@ -428,9 +443,9 @@
                 return;
             }
             
-            // --- 자동 다운로드 실행 (안내 없이) ---
+            // --- 자동 다운로드 실행 ---
             exportResponsesToCSV(); 
-            // -----------------------------------
+            // --------------------------
 
             let results = {};
 
@@ -453,6 +468,7 @@
 
                 results[areaId] = {
                     average: roundedAverage.toFixed(1),
+                    levelInfo: getLevelInfo(roundedAverage), // 레벨 정보 추가
                     feedback: feedbackData[areaId][feedbackKey]
                 };
             }
@@ -474,35 +490,56 @@
                 'III': '리더십 방향성'
             };
             
-            // A. 점수 요약 카드 생성
+            // A. 점수 요약 카드 생성 (남색/회색 톤)
             for (const areaId in results) {
                 const result = results[areaId];
                 const card = document.createElement('div');
-                // 반응형 카드 스타일 조정
-                card.className = 'bg-white border-4 border-indigo-500 rounded-xl shadow-lg p-5 sm:p-6 text-center transition hover:shadow-xl';
+                
+                // 레벨 색상 설정 (Level 3: Green, Level 2: Yellow, Level 1: Red)
+                let levelColor = 'text-gray-500'; // 기본값
+                let levelBg = 'bg-gray-100';
+                
+                if (result.levelInfo.level === 3) {
+                    levelColor = 'text-emerald-600'; // Level 3: 변화 주도 (녹색 계열)
+                    levelBg = 'bg-emerald-50';
+                } else if (result.levelInfo.level === 2) {
+                    levelColor = 'text-amber-600'; // Level 2: 활용 확장 (노랑/주황 계열)
+                    levelBg = 'bg-amber-50';
+                } else {
+                    levelColor = 'text-rose-600'; // Level 1: 기반 정립 (빨강 계열)
+                    levelBg = 'bg-rose-50';
+                }
+
+                // 남색/회색 톤 적용
+                card.className = 'bg-white border-4 border-slate-400 rounded-xl shadow-lg p-5 sm:p-6 text-center transition hover:shadow-xl';
                 card.innerHTML = `
-                    <p class="text-base sm:text-lg font-semibold text-indigo-700 mb-2">${areaTitles[areaId]}</p>
-                    <div class="text-4xl sm:text-5xl font-extrabold text-indigo-600">${result.average}</div>
+                    <p class="text-base sm:text-lg font-semibold text-slate-700 mb-2">${areaTitles[areaId]}</p>
+                    
+                    <div class="mb-4 inline-block px-3 py-1 rounded-full ${levelBg} ${levelColor} font-bold text-sm">
+                        ${result.levelInfo.name}
+                    </div>
+
+                    <div class="text-4xl sm:text-5xl font-extrabold text-slate-600">${result.average}</div>
                     <p class="mt-2 text-lg sm:text-xl font-bold text-gray-800">${result.feedback.title}</p>
                 `;
                 scoreSummary.appendChild(card);
             }
 
-            // B. 상세 해설 섹션 생성
+            // B. 상세 해설 섹션 생성 (옅은 회색 톤)
             for (const areaId in results) {
                 const result = results[areaId];
                 const detailDiv = document.createElement('div');
                 
-                // 배경색 및 테두리 색상 조정 (시각적 구분)
-                const bgColor = areaId === 'I' ? 'bg-indigo-50' : areaId === 'II' ? 'bg-blue-50' : 'bg-purple-50';
-                const borderColor = areaId === 'I' ? 'border-indigo-400' : areaId === 'II' ? 'border-blue-400' : 'border-purple-400';
-                const titleColor = areaId === 'I' ? 'text-indigo-700' : areaId === 'II' ? 'text-blue-700' : 'text-purple-700';
+                // 옅은 회색 톤 적용
+                const bgColor = 'bg-gray-100'; // 옅은 회색
+                const borderColor = 'border-slate-400'; // 남색 계열 테두리
+                const titleColor = 'text-slate-700'; // 남색 계열 제목
 
                 // 반응형 패딩 조정
                 detailDiv.className = `p-5 sm:p-6 rounded-xl border-l-4 ${borderColor} ${bgColor} shadow-md`;
                 detailDiv.innerHTML = `
                     <h3 class="text-xl sm:text-2xl font-extrabold ${titleColor} mb-3">
-                        ${areaTitles[areaId]} (평균: ${result.average})
+                        ${areaTitles[areaId]} (평균: ${result.average}점, ${result.levelInfo.name})
                     </h3>
                     <h4 class="text-lg sm:text-xl font-bold text-gray-900 mb-3">${result.feedback.title}</h4>
                     <p class="text-sm sm:text-base text-gray-700 leading-relaxed whitespace-pre-wrap">${result.feedback.message}</p>
@@ -522,6 +559,7 @@
         function restartAssessment() {
             // 폼 필드 초기화 (응답 내용 삭제)
             assessmentForm.reset();
+            
             // 결과 숨기고 폼 표시
             resultsContainer.classList.add('hidden');
             assessmentForm.classList.remove('hidden');
@@ -532,6 +570,7 @@
         // 5. 응답 확인 및 수정 함수 (돌아가기 버튼 클릭 이벤트)
         function goBackToSurvey() {
             // 폼 필드 초기화하지 않음 (응답 내용 유지)
+            
             // 결과 숨기고 폼 표시
             resultsContainer.classList.add('hidden');
             assessmentForm.classList.remove('hidden');
@@ -549,4 +588,3 @@
     </script>
 </body>
 </html>
-�
