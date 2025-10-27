@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI 협업 리더 역량 진단 설문</title>
     
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         // Tailwind JIT 활성화 및 설정
@@ -17,38 +19,72 @@
         }
     </script>
     <style>
-        /* Inter 폰트 설정 */
+        /* Noto Sans KR 폰트 설정 (한글 우선 적용) */
         :root {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Noto Sans KR', sans-serif;
         }
         
+        /* 기본 글자 크기, 줄 간격 조정으로 가독성 향상 */
+        body {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #333; /* Darker default text for better contrast */
+        }
+
         /* --- 커스텀 라디오 버튼 스타일 --- */
         
-        /* 라디오 버튼 자체를 숨기되, label 연결을 통해 클릭 기능 유지 */
         .rating-input {
             display: none; 
         }
         
         .rating-label {
-            /* 라벨 전체를 클릭 영역 (하나의 버튼)으로 설정 */
-            flex: 1; 
+            /* flex-grow: 1 대신 min-width를 사용하여 모바일에서 겹침 방지 및 줄바꿈 유도 */
+            min-width: calc(20% - 0.5rem); /* 5개 버튼이 1줄에 들어갈 때의 최소 너비, 간격 고려 */
+            flex-basis: auto; /* 내용 길이에 따라 유동적으로 너비 조절 */
             display: flex; 
             flex-direction: column; 
             align-items: center; 
             justify-content: space-between; /* 내용 상하 배치 */
             cursor: pointer; 
             padding: 0.75rem 0.25rem; /* 상하 여백 늘려 버튼 영역 확보 */
-            min-height: 80px; /* 최소 높이 지정하여 텍스트 길이에 관계없이 정렬 유지 */
+            min-height: 90px; /* 최소 높이 지정하여 텍스트 길이에 관계없이 정렬 유지 */
             border-radius: 0.75rem; 
-            transition: all 0.2s; 
-            border-width: 0px; /* 테두리 제거 */
+            transition: all 0.2s ease-in-out; /* 부드러운 전환 효과 */
+            border: 2px solid #e0e0e0; /* 기본 테두리 색상 추가 */
             text-align: center;
+            background-color: #f8f8f8; /* 기본 배경색 */
+            margin: 0.25rem; /* 버튼 간 최소 간격 확보 */
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05); /* 은은한 그림자 */
         }
+
+        /* 모바일 환경에서 버튼 너비 조정 */
+        @media (max-width: 640px) { /* sm breakpoint */
+            .rating-label {
+                min-width: calc(50% - 0.5rem); /* 모바일에서는 한 줄에 2개씩 배치 */
+                min-height: 80px; /* 모바일에서 높이 조정 */
+            }
+            /* 점수별 설명 텍스트 크기 모바일 최적화 */
+            .rating-score-text {
+                font-size: 0.8rem; /* text-xs 보다 조금 더 크게 */
+            }
+        }
+        @media (max-width: 480px) { /* 더 작은 모바일 화면 */
+            .rating-label {
+                min-width: calc(100% - 0.5rem); /* 한 줄에 1개씩 배치 */
+                min-height: 70px;
+            }
+            .rating-score-text {
+                font-size: 0.9rem;
+            }
+        }
+
 
         /* 호버 시 시각적 피드백 */
         .rating-label:hover {
             background-color: #eef2ff; /* indigo-50 */
-            border-color: transparent; /* 호버 시 테두리 색상도 투명하게 유지 */
+            border-color: #a5b4fc; /* indigo-300 */
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transform: translateY(-2px); /* 살짝 떠오르는 효과 */
         }
 
         /* 작은 동그라미 (체크 마크)의 기본 스타일 */
@@ -61,106 +97,100 @@
             background-color: #ffffff; /* bg-white */
             display: block; 
             margin-bottom: 0.5rem; /* mb-2 */
-            transition: all 0.15s;
+            transition: all 0.15s ease-in-out;
         }
 
         /* 점수 텍스트 (보기 설명)의 기본 스타일 */
         .rating-score-text {
-            font-size: 0.75rem; /* text-xs */
+            font-size: 0.875rem; /* text-sm으로 변경 */
             font-weight: 500; /* font-medium */
             color: #4b5563; /* text-gray-700 */
-            line-height: 1.2;
-            transition: all 0.15s;
+            line-height: 1.3; /* 줄 간격 조절 */
+            transition: all 0.15s ease-in-out;
         }
         
         .rating-score-number {
-             font-weight: 800;
+             font-weight: 700; /* 굵기 강화 */
              margin-right: 0.15rem;
+             color: #4f46e5; /* indigo-600 */
         }
 
         /* --- Input이 선택되었을 때의 스타일 (핵심 기능) --- */
         
-        /* 선택 시 라벨 배경 강조 및 테두리 그림자 제거 */
+        /* 선택 시 라벨 배경 강조 및 테두리 색상 변경 */
         .rating-input:checked + .rating-label {
-            background-color: transparent; 
+            background-color: #e0e7ff; /* indigo-100 */
+            border-color: #6366f1; /* indigo-500 */
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateY(-2px); /* 선택 시 살짝 떠오르는 효과 유지 */
         }
 
         /* 작은 동그라미 칸에 색 채우기 */
         .rating-input:checked + .rating-label .rating-circle {
             background-color: #4f46e5; /* indigo-600 */
             border-color: #4f46e5; /* indigo-600 */
+            transform: scale(1.1); /* 선택 시 살짝 커지는 효과 */
         }
 
-        /* 선택된 보기 텍스트를 굵게 변경 */
+        /* 선택된 보기 텍스트를 굵게 변경 및 색상 강조 */
         .rating-input:checked + .rating-label .rating-score-text {
-            font-weight: 800; /* font-extrabold */
+            font-weight: 700; /* font-bold */
+            color: #3730a3; /* indigo-900 */
+        }
+        .rating-input:checked + .rating-label .rating-score-number {
             color: #3730a3; /* indigo-900 */
         }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen p-4 sm:p-8">
-    <div id="app" class="max-w-4xl mx-auto bg-white shadow-2xl rounded-xl p-6 sm:p-10">
+<body class="bg-gray-50 min-h-screen p-4 sm:p-8">
+    <div id="app" class="max-w-4xl mx-auto bg-white shadow-xl rounded-2xl p-6 sm:p-10">
         
-        <!-- Header -->
-        <header class="text-center mb-10">
-            <h1 class="text-3xl sm:text-4xl font-extrabold text-indigo-700 mb-2">
+        <header class="text-center mb-10 border-b pb-6 border-indigo-100">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-indigo-700 mb-2 leading-tight">
                 AI 협업 워크플로우 리더 역량 진단
             </h1>
-            <p class="text-gray-600 text-lg">
+            <p class="text-gray-600 text-lg sm:text-xl">
                 교육 시작 전, 리더님의 현재 AI 협업 준비 수준을 자가 진단해 보세요.
             </p>
         </header>
 
-        <!-- Survey Form -->
         <form id="assessmentForm">
-            <!-- Questions will be dynamically inserted here -->
-            <div id="questionsContainer" class="space-y-6"></div>
+            <div id="questionsContainer" class="space-y-8"></div>
 
-            <!-- Submit Button -->
             <div class="mt-12">
                 <button type="submit" id="submitButton"
-                    class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg transition duration-300 shadow-md hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-indigo-500 focus:ring-opacity-50">
+                    class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 sm:py-4 px-4 rounded-lg transition duration-300 shadow-lg hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-indigo-500 focus:ring-opacity-50 text-lg">
                     진단 결과 확인하기
                 </button>
             </div>
         </form>
 
-        <!-- Results Section (Initially Hidden) -->
         <div id="resultsContainer" class="hidden mt-16 pt-8 border-t-4 border-indigo-200">
-            <h2 class="text-3xl font-bold text-indigo-700 mb-6 text-center">종합 진단 결과</h2>
-            
-            <!-- Download Confirmation Message 제거됨 -->
+            <h2 class="text-3xl sm:text-4xl font-bold text-indigo-700 mb-8 text-center">종합 진단 결과</h2>
             
             <div id="scoreSummary" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-                <!-- Score cards will be inserted here -->
-            </div>
-
-            <!-- Download button removed -->
-
+                </div>
 
             <div id="feedbackDetails" class="space-y-8 mt-10">
-                <!-- Detailed feedback will be inserted here -->
-            </div>
+                </div>
 
-            <!-- Navigation Buttons -->
-            <div class="mt-12 text-center space-x-4">
+            <div class="mt-12 text-center space-x-2 sm:space-x-4">
                  <button id="goBackButton"
-                    class="bg-indigo-100 hover:bg-indigo-200 text-indigo-800 font-bold py-3 px-6 rounded-lg transition duration-300 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-opacity-50">
+                    class="bg-indigo-100 hover:bg-indigo-200 text-indigo-800 font-bold py-3 px-4 sm:px-6 rounded-lg transition duration-300 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-opacity-50 text-base sm:text-lg">
                     응답 확인 및 수정하기
                 </button>
                  <button id="restartButton"
-                    class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 px-6 rounded-lg transition duration-300 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50">
+                    class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 px-4 sm:px-6 rounded-lg transition duration-300 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50 text-base sm:text-lg">
                     설문 다시 시작하기
                 </button>
             </div>
             
             <div class="mt-8 text-center text-gray-600 border-t pt-4">
-                <p class="font-medium">이 결과는 리더님의 교육 집중 영역을 안내하며, 절대적인 평가 기준이 아님을 알려드립니다.</p>
+                <p class="font-medium text-sm sm:text-base">이 결과는 리더님의 교육 집중 영역을 안내하며, 절대적인 평가 기준이 아님을 알려드립니다.</p>
             </div>
         </div>
     </div>
 
-    <!-- JavaScript Core Logic -->
     <script>
         // 설문 문항 데이터 정의
         const surveyData = [
@@ -219,7 +249,7 @@
             'III': {
                 high: { title: '👑 미래 변화 주도 리더', message: '✅ <b>현재 상태:</b> AI가 가져올 변화의 파급력을 믿고 있으며, 팀원의 육성, 실험적 문화 지원, 평가 기준 변화에 대한 인식과 의지가 확고합니다. 변화를 이끌 준비가 되어 있습니다. \n\n🚀 <b>성장 방향:</b> 교육의 <b>3, 4단계(재설계 및 역할 재정의)</b>를 통해 리더님의 강력한 의지를 <b>실질적인 변화 관리 전략</b>과 <b>AI 시대에 맞는 팀 운영 모델</b>로 최적화하십시오. <b>롤 모델</b>으로서의 역할을 완성하는 데 집중해 주세요.' },
                 mid: { title: '🤝 역할 변화 고민 단계', message: '✅ <b>현재 상태:</b> AI의 영향력은 인지하지만, 팀원들의 새로운 역량 육성, 평가 기준 변화, 실험 문화 조성에 대한 <b>구체적인 지원 방안</b>에 대한 고민은 진행 중인 단계입니다. \n\n💪 <b>성장 방향:</b> AI 시대 리더의 역할은 \'촉진자/지원자\'입니다. 교육의 <b>4단계(리더의 역할 재정의)</b>를 통해 <b>팀원들의 자발적 AI 활용</b>을 이끌어낼 수 있는 <b>실질적인 지원 전략</b>과 <b>유연한 평가 기준</b> 설정 방안을 모색하는 데 집중하십시오.' },
-                low: { title: '🔄 리더십 관점 전환 필수', message: '✅ <b>현재 상태:</b> AI가 업무 프로세스 자체를 바꾼다는 믿음이 약하며, 변화 관리 및 팀 지원에 대한 의지가 낮은 상태입니다. 새로운 기술에 대한 리더십 관점 전환이 필요합니다. \n\n🎯 <b>성장 방향:</b> AI는 단순히 \'업무 개선\'을 넘어 \'업무 재설계\'를 요구합니다. 교육의 <b>3단계(재설계)</b>와 <b>4단계(역할 재정의)</b>에서 제시하는 <b>AI 시대의 새로운 리더십 관점</b>을 반드시 내재화하고, 변화를 주도하는 첫 걸음을 내딛는 데 집중해 주세요.' }
+                low: { title: '� 리더십 관점 전환 필수', message: '✅ <b>현재 상태:</b> AI가 업무 프로세스 자체를 바꾼다는 믿음이 약하며, 변화 관리 및 팀 지원에 대한 의지가 낮은 상태입니다. 새로운 기술에 대한 리더십 관점 전환이 필요합니다. \n\n🎯 <b>성장 방향:</b> AI는 단순히 \'업무 개선\'을 넘어 \'업무 재설계\'를 요구합니다. 교육의 <b>3단계(재설계)</b>와 <b>4단계(역할 재정의)</b>에서 제시하는 <b>AI 시대의 새로운 리더십 관점</b>을 반드시 내재화하고, 변화를 주도하는 첫 걸음을 내딛는 데 집중해 주세요.' }
             }
         };
 
@@ -303,15 +333,13 @@
             surveyData.forEach(area => {
                 // 영역 제목
                 const areaTitleDiv = document.createElement('div');
-                // border-b 제거, mb-4로 줄간격 축소
                 areaTitleDiv.className = 'pb-2 mb-4'; 
-                areaTitleDiv.innerHTML = `<h2 class="text-2xl font-semibold text-indigo-600">${area.title}</h2>`;
+                areaTitleDiv.innerHTML = `<h2 class="text-xl sm:text-2xl font-semibold text-indigo-600">${area.title}</h2>`;
                 questionsContainer.appendChild(areaTitleDiv);
 
                 // 영역별 테두리 그룹 컨테이너
                 const areaContentDiv = document.createElement('div');
-                // mb-6으로 줄간격 축소
-                areaContentDiv.className = 'border border-gray-300 rounded-xl p-4 mb-6'; 
+                areaContentDiv.className = 'border border-gray-300 rounded-xl p-4 sm:p-6 mb-6'; 
                 questionsContainer.appendChild(areaContentDiv);
 
 
@@ -326,13 +354,11 @@
 
                     // 질문 텍스트
                     questionDiv.innerHTML = `
-                        <p class="text-base font-medium text-gray-800 mb-4">
+                        <p class="text-base sm:text-lg font-medium text-gray-800 mb-4 leading-relaxed">
                             <span class="text-indigo-600 font-bold mr-2">${qIndex}.</span> ${qText}
                         </p>
                         
-                        <!-- Rating Buttons (Combined Score and Description) -->
-                        <div class="flex justify-between space-x-2 sm:space-x-3">
-                            ${[1, 2, 3, 4, 5].map(score => `
+                        <div class="flex flex-wrap justify-center sm:justify-between -m-1"> ${[1, 2, 3, 4, 5].map(score => `
                                 <input type="radio" id="q${qIndex}-${score}" name="q${qIndex}" value="${score}"
                                     class="rating-input" data-area="${area.id}" data-q-content="${qText}">
                                 <label for="q${qIndex}-${score}" class="rating-label">
@@ -452,11 +478,12 @@
             for (const areaId in results) {
                 const result = results[areaId];
                 const card = document.createElement('div');
-                card.className = 'bg-white border-4 border-indigo-500 rounded-xl shadow-lg p-5 text-center transition hover:shadow-xl';
+                // 반응형 카드 스타일 조정
+                card.className = 'bg-white border-4 border-indigo-500 rounded-xl shadow-lg p-5 sm:p-6 text-center transition hover:shadow-xl';
                 card.innerHTML = `
-                    <p class="text-lg font-semibold text-indigo-700 mb-2">${areaTitles[areaId]}</p>
-                    <div class="text-5xl font-extrabold text-indigo-600">${result.average}</div>
-                    <p class="mt-2 text-xl font-bold text-gray-800">${result.feedback.title}</p>
+                    <p class="text-base sm:text-lg font-semibold text-indigo-700 mb-2">${areaTitles[areaId]}</p>
+                    <div class="text-4xl sm:text-5xl font-extrabold text-indigo-600">${result.average}</div>
+                    <p class="mt-2 text-lg sm:text-xl font-bold text-gray-800">${result.feedback.title}</p>
                 `;
                 scoreSummary.appendChild(card);
             }
@@ -471,13 +498,14 @@
                 const borderColor = areaId === 'I' ? 'border-indigo-400' : areaId === 'II' ? 'border-blue-400' : 'border-purple-400';
                 const titleColor = areaId === 'I' ? 'text-indigo-700' : areaId === 'II' ? 'text-blue-700' : 'text-purple-700';
 
-                detailDiv.className = `p-6 rounded-xl border-l-4 ${borderColor} ${bgColor} shadow-md`;
+                // 반응형 패딩 조정
+                detailDiv.className = `p-5 sm:p-6 rounded-xl border-l-4 ${borderColor} ${bgColor} shadow-md`;
                 detailDiv.innerHTML = `
-                    <h3 class="text-2xl font-extrabold ${titleColor} mb-3">
+                    <h3 class="text-xl sm:text-2xl font-extrabold ${titleColor} mb-3">
                         ${areaTitles[areaId]} (평균: ${result.average})
                     </h3>
-                    <h4 class="text-xl font-bold text-gray-900 mb-3">${result.feedback.title}</h4>
-                    <p class="text-gray-700 leading-relaxed whitespace-pre-wrap">${result.feedback.message}</p>
+                    <h4 class="text-lg sm:text-xl font-bold text-gray-900 mb-3">${result.feedback.title}</h4>
+                    <p class="text-sm sm:text-base text-gray-700 leading-relaxed whitespace-pre-wrap">${result.feedback.message}</p>
                 `;
                 feedbackDetails.appendChild(detailDiv);
             }
@@ -517,8 +545,8 @@
             assessmentForm.addEventListener('submit', calculateAndDisplayResults);
             restartButton.addEventListener('click', restartAssessment); 
             goBackButton.addEventListener('click', goBackToSurvey);
-            // CSV 버튼 리스너 제거됨 (자동 다운로드로 대체)
         };
     </script>
 </body>
 </html>
+�
